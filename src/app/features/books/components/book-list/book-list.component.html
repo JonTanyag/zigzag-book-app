@@ -4,7 +4,11 @@
 <div class="container">
     <h3 class="mt-5 mb-3">Book List</h3>
 
-    <table class="table table-striped">
+    <div *ngIf="books.length === 0" class="alert alert-info">
+        No records available.
+    </div>
+
+    <table *ngIf="books.length > 0" class="table table-striped">
         <thead>
             <tr>
                 <th>Title</th>
