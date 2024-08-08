@@ -1,0 +1,35 @@
+<app-home></app-home>
+
+<hr>
+<div class="container">
+    <h3 class="mt-5 mb-3">Book List</h3>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>ISBN</th>
+                <th>Published Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let book of books">
+                <td>{{book.title}}</td>
+                <td>{{book.author}}</td>
+                <td>{{book.isbn}}</td>
+                <td>{{book.publishedDate | date: 'MMM dd, yyyy'}}</td>
+                <td>
+                    <button class="btn btn-sm btn-primary mx-1" [routerLink]="['/edit', book.id]" [queryParams]="{readonly: true}">View</button>
+                    <button class="btn btn-sm btn-secondary mx-1" [routerLink]="['/edit', book.id]">Edit</button>
+                    <button class="btn btn-sm btn-danger mx-1" (click)="deleteBook(book.id)">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ng-template #noReservation>
+        <p>No reservation available.</p>
+    </ng-template>
+</div>

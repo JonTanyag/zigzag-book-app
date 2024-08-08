@@ -1,0 +1,33 @@
+<app-home></app-home>
+
+<hr>
+<div class="container">
+    <h3 class="mt-5 mb-3">Add new Book</h3>
+    <form [formGroup]="bookForm" (ngSubmit)="onSubmit()">
+    
+        <div class="mb-3">
+            <label class="form-label">Title:</label>
+            <input class="form-control" type="text" [readOnly]="readonly" formControlName="title">
+        </div>
+    
+        <div class="mb-3">
+            <label class="form-label">Author:</label>
+            <input class="form-control" type="email" [readOnly]="readonly" formControlName="author">
+        </div>
+    
+        <div class="mb-3">
+            <label class="form-label">ISBN:</label>
+            <input class="form-control" type="text" [readOnly]="readonly"  formControlName="isbn">
+        </div>
+
+        <div class="col">
+            <label class="form-label">Published Date:</label>
+            <input class="form-control" type="date" [readOnly]="readonly" formControlName="publishedDate">
+        </div>
+        
+        <div>
+            <button class="btn btn-primary" *ngIf="!this.readonly" type="submit" [disabled]="bookForm.invalid">Submit</button>
+            <button class="btn btn-primary" *ngIf="this.readonly" onclick="back()">Back</button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,12 @@
+.gitignore
+.openapi-generator-ignore
+apis/BookControlerApi.ts
+apis/index.ts
+index.ts
+models/AddBookCommand.ts
+models/BookDto.ts
+models/UpdateBookCommand.ts
+models/index.ts
+runtime.ts
+servers.ts
+tsconfig.json
