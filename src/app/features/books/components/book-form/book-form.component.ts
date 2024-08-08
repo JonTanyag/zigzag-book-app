@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { BookService } from '../../../../shared/service/book.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Book } from '../../../../shared/models/book';
-import { DatePipe } from '@angular/common';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-book-form',
@@ -11,7 +11,13 @@ import { DatePipe } from '@angular/common';
   styleUrl: './book-form.component.scss'
 })
 export class BookFormComponent implements OnInit {
-
+  book: Book = {
+    id: uuidv4(),
+    title: '',
+    author: '',
+    isbn: '',
+    publishedDate: new Date()
+  };
   bookForm: FormGroup = new FormGroup({});
   readonly: boolean = false;
 
@@ -26,40 +32,44 @@ export class BookFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.bookForm = this.formBuilder.group({
-      title: [''],
-      author: [''],
-      isbn: [''],
-      publishedDate: [new Date()],
-    })
     this.loadBook();
-  }
-
-  setReadOnly(readonly: boolean) {
-    this.readonly = readonly;
   }
 
   loadBook() {
     let id = this.activatedRoute.snapshot.paramMap.get('id');
     if (id) {
-      this._bookService.getBook(id)?.subscribe(res => {
-        if (res) {
-          // res.publishedDate = new Date(this.formatDate(res.publishedDate));
-          this.bookForm.patchValue(res);
+      this._bookService.getBook(id)?.subscribe((book: Book) => {
+        this.book = book; 
+        if (this.book.publishedDate) {
+          const date = new Date(this.book.publishedDate);
+          this.book.publishedDate = date;
         }
       });
     }
   }
 
+  get formattedPublishedDate(): string {
+    return this.book.publishedDate.toISOString().split('T')[0];
+  }
+
+  set formattedPublishedDate(value: string) {
+    const [year, month, day] = value.split('-').map(num => parseInt(num, 10));
+    this.book.publishedDate = new Date(year, month - 1, day); 
+  }
+
+  isValid() {
+    return this.book.title && this.book.author && this.book.isbn && this.book.publishedDate;
+  }
+
   onSubmit() {
-    if (this.bookForm.valid) {
-      let book: Book = this.bookForm.value;
+    if (this.isValid()) {
+      let bookData: Book = this.book;
       let id = this.activatedRoute.snapshot.paramMap.get('id');
 
       if (id) {
-        this._bookService.updateBook(id, book).subscribe(res => { this.back(); });
+        this._bookService.updateBook(id, bookData).subscribe(res => { this.back(); });
       } else {
-        this._bookService.addBook(book).subscribe(() => { this.back(); });
+        this._bookService.addBook(bookData).subscribe(() => { this.back(); });
       }
     }
   }
