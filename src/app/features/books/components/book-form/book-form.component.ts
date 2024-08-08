@@ -43,9 +43,8 @@ export class BookFormComponent implements OnInit {
     let id = this.activatedRoute.snapshot.paramMap.get('id');
     if (id) {
       this._bookService.getBook(id)?.subscribe(res => {
-        debugger;
         if (res) {
-          res.publishedDate = new Date(this.formatDate(res.publishedDate));
+          // res.publishedDate = new Date(this.formatDate(res.publishedDate));
           this.bookForm.patchValue(res);
         }
       });

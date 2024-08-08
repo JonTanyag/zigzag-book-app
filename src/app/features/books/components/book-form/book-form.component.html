@@ -25,9 +25,9 @@
             <input class="form-control" type="date" [readOnly]="readonly" formControlName="publishedDate">
         </div>
         
-        <div>
+        <div class="mb-3">
             <button class="btn btn-primary" *ngIf="!this.readonly" type="submit" [disabled]="bookForm.invalid">Submit</button>
-            <button class="btn btn-primary" *ngIf="this.readonly" onclick="back()">Back</button>
+            <button class="btn btn-primary" [routerLink]="['/list']">Back</button>
         </div>
     </form>
 </div>
