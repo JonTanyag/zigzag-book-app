@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Book } from '../models/book';
@@ -8,28 +8,30 @@ import { Book } from '../models/book';
 })
 export class BookService {
 
-  private BASE_URL = "http://localhost:5056/api"
+  private BASE_URL = "http://localhost:5056"
+  private API_KEY = "Your-Secret-Api-Key-Here"
+  private header = new HttpHeaders({ 'X-Api-Token': this.API_KEY })
 
   constructor(private http: HttpClient) { }
 
   getBooks(): Observable<Book[]> {
-    return this.http.get<Book[]>(this.BASE_URL + "/books");
+    return this.http.get<Book[]>(this.BASE_URL + "/books", { headers: this.header });
   }
 
-  getBook(id: string): Observable<Book> {
-    return this.http.get<Book>(this.BASE_URL + "/books/" + id);
+  getBook(id: number): Observable<Book> {
+    return this.http.get<Book>(this.BASE_URL + "/book/" + id, { headers: this.header });
   }
 
   addBook(book: Book): Observable<void> {
-    return this.http.post<void>(this.BASE_URL + "/books", {book: book});
+    return this.http.post<void>(this.BASE_URL + "/book", { book: book }, { headers: this.header });
   }
 
-  updateBook(id: string, book: Book): Observable<Book> {
+  updateBook(id: number, book: Book): Observable<Book> {
     book.id = id;
-    return this.http.put<Book>(this.BASE_URL + "/books/" + id, {book: book});
+    return this.http.put<Book>(this.BASE_URL + "/book/" + id, { book: book }, { headers: this.header });
   }
 
-  deleteBook(id: string): Observable<void> {
-    return this.http.delete<void>(this.BASE_URL + "/books/" + id);
+  deleteBook(id: number): Observable<void> {
+    return this.http.delete<void>(this.BASE_URL + "/book/" + id, { headers: this.header });
   }
 }

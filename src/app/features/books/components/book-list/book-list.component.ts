@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Book } from '../../../../shared/models/book';
 import { BookService } from '../../../../shared/service/book.service';
+import { catchError, throwError } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 
 @Component({
@@ -11,20 +13,32 @@ import { BookService } from '../../../../shared/service/book.service';
 export class BookListComponent implements OnInit {
 
   books: Book[] = [];
+  errorMessage: string | null = null;
 
   constructor(private _bookService: BookService){ }
 
   ngOnInit(): void {
-    this.getBooks();
+    this.loadBooks();
   }
 
-  getBooks() {
+  loadBooks() {
     this._bookService.getBooks()
     .subscribe(res => {
       this.books = res;
     })
   }
-  deleteBook(id: string) {
+
+  private handleError(error: HttpErrorResponse){
+    if (error.status === 401) {
+      this.errorMessage = 'You are not authorized to view this resource.'
+    } else {
+      this.errorMessage = 'An error occurred.'
+    }
+
+    return throwError(error);
+  }
+
+  deleteBook(id: number) {
     this._bookService.deleteBook(id)
                   .subscribe(() => {
                     this.books = this.books.filter(item => item.id != id);

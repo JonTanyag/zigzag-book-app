@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 })
 export class BookFormComponent implements OnInit {
   book: Book = {
-    id: uuidv4(),
+    id: 0,
     title: '',
     author: '',
     isbn: '',
@@ -36,7 +36,7 @@ export class BookFormComponent implements OnInit {
   }
 
   loadBook() {
-    let id = this.activatedRoute.snapshot.paramMap.get('id');
+    let id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
     if (id) {
       this._bookService.getBook(id)?.subscribe((book: Book) => {
         this.book = book; 
@@ -67,7 +67,7 @@ export class BookFormComponent implements OnInit {
       let id = this.activatedRoute.snapshot.paramMap.get('id');
 
       if (id) {
-        this._bookService.updateBook(id, bookData).subscribe(res => { this.back(); });
+        this._bookService.updateBook(Number(id), bookData).subscribe(res => { this.back(); });
       } else {
         this._bookService.addBook(bookData).subscribe(() => { this.back(); });
       }
